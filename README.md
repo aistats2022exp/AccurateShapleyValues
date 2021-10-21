@@ -1,7 +1,7 @@
 # Accurate Shapley Values for tree-based model
  
 ACV is a python library that provides **a better estimation of 
-Shapley values (SV) for tree-based model** (>= dependent TreeSHAP). 
+Shapley values (SV) for tree-based model** (> dependent TreeSHAP). 
 In addition, we use the coalition version of SV to properly handle categorical variables in the computation of SV.
 
 
