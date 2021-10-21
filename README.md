@@ -17,26 +17,23 @@ see for example [pysteps installation for OSX.](https://pypi.org/project/pysteps
 
 ## Installation
 
-Install the acv package:
+Clone the repo and run the following command in the main directory
 ```
-$ pip install acv-exp
+$ python setup.py install
 ```
 
 ## How does ACV work?
-To compute the different explanations, we only need a **trained Random Forest** and 
-- Data **(X, Y)** if we want to explain directly the data
-- Or **(X, f(X))** if we want to explain the model f
-
+ACV works for XGBoost, LightGBM, CatBoostClassifier, scikit-learn and pyspark tree models. To use it, we need to transform our model into ACVTree.
 ### Example:
 
 ```python
 from acv_explainers import ACVTree
 
-forest = RandomForestClassifier() # or  Random Forest Regressor models
+tree_based = RandomForestClassifier() # or any tree-based models
 #...trained the model
 
 # Initialize the explainer
-acvtree = ACVTree(forest, data) # data should be np.ndarray with dtype=double
+acvtree = ACVTree(tree_based, data) # data should be np.ndarray with dtype=double
 ```
 ### Shapley Values of categorical variables
 Let assume we have a categorical variable Y with k modalities that we encoded by introducing the dummy variables <img src="https://latex.codecogs.com/gif.latex?Y_1%2C%5Cdots%2C%20Y_%7Bk-1%7D" />. As show in the paper, we must take the coalition of the dummy variables to correctly calculate the Shapley values.
@@ -64,3 +61,5 @@ forest_sv = acvtree.shap_values(X, C=coalition)
 coalition = [[]]
 forest_sv = acvtree.shap_values(X, C=coalition)
 ```
+
+You will find the experiments of the paper: [HERE](https://github.com/aistats2022exp/AccurateShapleyValues/tree/main/notebook)
