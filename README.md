@@ -1,7 +1,7 @@
 # Accurate Shapley Values for tree-based model
  
 ACV is a python library that provides **a better estimation of 
-Shapley values (SV) for tree-based model** (>= dependent TreeSHAP). 
+Shapley values (SV) for tree-based model** (> dependent TreeSHAP). 
 In addition, we use the coalition version of SV to properly handle categorical variables in the computation of SV.
 
 
@@ -41,7 +41,7 @@ tree_based = RandomForestClassifier() # or any tree-based models
 # Initialize the explainer
 acvtree = ACVTree(tree_based, data) # data should be np.ndarray with dtype=double
 ```
-### Shapley Values of categorical variables
+### Shapley Values with categorical variables
 Let assume we have a categorical variable Y with k modalities that we encoded by introducing the dummy variables <img src="https://latex.codecogs.com/gif.latex?Y_1%2C%5Cdots%2C%20Y_%7Bk-1%7D" />. As show in the paper, we must take the coalition of the dummy variables to correctly calculate the Shapley values.
 
 ```python
@@ -53,7 +53,7 @@ Let assume we have a categorical variable Y with k modalities that we encoded by
 cat_index = [[0, 1, 2], [3, 4, 5]]
 forest_sv = acvtree.shap_values(X, C=cat_index)
 ```
-In addition, we can compute the SV given any coalitions. For example, if we want the following coalition <img src="https://latex.codecogs.com/gif.latex?C_0%20%3D%20%28X_0%2C%20X_1%2C%20X_2%29%2C%20C_1%3D%28X_3%2C%20X_4%29%2C%20C_2%3D%28X_5%2C%20X_6%29" />
+In addition, we can compute the SV given any coalition. For example, if we want the following coalitions <img src="https://latex.codecogs.com/gif.latex?C_0%20%3D%20%28X_0%2C%20X_1%2C%20X_2%29%2C%20C_1%3D%28X_3%2C%20X_4%29%2C%20C_2%3D%28X_5%2C%20X_6%29" />
 
 ```python
 
