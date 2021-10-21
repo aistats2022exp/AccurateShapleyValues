@@ -47,7 +47,7 @@ Let assume we have a categorical variable Y with k modalities that we encoded by
 cat_index = [[0, 1, 2], [3, 4, 5]]
 forest_sv = acvtree.shap_values(X, C=cat_index)
 ```
-In addition, we can compute the SV given any coalitions. For example, if we want the following coalition <img src="https://latex.codecogs.com/gif.latex?C_0%20%3D%20%28X_0%2C%20X_1%2C%20X_2%29%2C%20C_1%3D%28X_3%2C%20X_4%29%2C%20C_2%3D%28X_5%2C%20X_6%29" />
+In addition, we can compute the SV given any coalition. For example, if we want the following coalitions <img src="https://latex.codecogs.com/gif.latex?C_0%20%3D%20%28X_0%2C%20X_1%2C%20X_2%29%2C%20C_1%3D%28X_3%2C%20X_4%29%2C%20C_2%3D%28X_5%2C%20X_6%29" />
 
 ```python
 
