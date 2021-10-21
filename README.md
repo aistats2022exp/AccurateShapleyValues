@@ -1,7 +1,10 @@
-# Consistent Sufficient Explantions and Minimal Sufficient Rules 
+# Accurate Shapley Values for tree-based model
  
-Active Coalition of Variables ACV is a Package that implemented the SDP Approaches of the Paper: [ref].
- 
+ACV is a python library that provides **a better estimation of 
+Shapley values (SV) for tree-based model** (>= dependent TreeSHAP). 
+In addition, we use the coalition version of SV to properly handle categorical variables in the computation of SV.
+
+
 ## Requirements
 Python 3.6+ 
 
@@ -24,7 +27,7 @@ To compute the different explanations, we only need a **trained Random Forest** 
 - Data **(X, Y)** if we want to explain directly the data
 - Or **(X, f(X))** if we want to explain the model f
 
-### Examples:
+### Example:
 
 ```python
 from acv_explainers import ACVTree
@@ -35,61 +38,29 @@ forest = RandomForestClassifier() # or  Random Forest Regressor models
 # Initialize the explainer
 acvtree = ACVTree(forest, data) # data should be np.ndarray with dtype=double
 ```
-
-Given <img src="https://latex.codecogs.com/gif.latex?x%20%3D%20%28x_S%2C%20x_%7B%5Cbar%7BS%7D%7D%29" />, the same decision probability <img src="https://latex.codecogs.com/gif.latex?SDP_S%28x%2C%20f%29" /> of variables <img src="https://latex.codecogs.com/gif.latex?x_S" />  is the probabilty that the prediction remains the same when we do not observe the variables <img src="https://latex.codecogs.com/gif.latex?x_{\bar{S}}" />.
-* **How to compute  the Same Decision Probability of a subset S <img src="https://latex.codecogs.com/gif.latex?SDP_S%28x%2C%20f%29" />  ?**
-
-```python
-sdp = acvtree.compute_sdp_rf(X, S, data)
-
-"""
-Description of the arguments    
-   
-X (np.ndarray[2]): observations        
-S (np.ndarray[1]): index of variables on which we want to compute the SDP
-data (np.ndarray[2]): data used to compute the SDP
-"""
-```
-* **How to compute All the Sufficient Explanations <img src="https://latex.codecogs.com/gif.latex?S^\star" />** ?
-```python 
-sufficient_coal, sdp_coal, sdp_global = acvtree.sufficient_coal_rf(x_test, y_test, x_train, y_train, stop=False, global_proba=global_proba,
-                                                                    classifier=0, t=t)
-
-"""
-Description of the arguments
-
-classifier (int): 0 if it is a classification problem, and 1 if it is a regression problem
-t (np.double): Only necessary for regression problem, it corresponds to the radius of the ball of the SDP 
-"""
-```
-
-*  **How to compute the Minimal Sufficient Explanation ?**
-```python
-sdp_importance, sdp_index, size, sdp = acvtree.importance_sdp_clf(X, data, C=[[]], global_proba=0.9)
-
-"""
-Description of the arguments
-
-X (np.ndarray[2]): observations
-data (np.ndarray[2]): data used for the estimation
-C (list[list]): list of the index of variables group together
-global_proba (double): the level of the SDP, default value = 0.9
-
-sdp_index[i, :size[i]] corresponds to the index of the variables in $S^\star$ of observation i  
-sdp[i] corresponds to the SDP value of the $S^\star$ of observation i
-"""
-```
-
-* **How to compute the Minimal Local Rule based on a Sufficient Explanation S**
+### Shapley Values of categorical variables
+Let assume we have a categorical variable Y with k modalities that we encoded by introducing the dummy variables <img src="https://latex.codecogs.com/gif.latex?Y_1%2C%5Cdots%2C%20Y_%7Bk-1%7D" />. As show in the paper, we must take the coalition of the dummy variables to correctly calculate the Shapley values.
 
 ```python
-sdp, rules, sdp_all, rules_data = acvtree.compute_sdp_maxrules(x_test, y_test, x_train, y_train,
-                                                    S=[S], classifier=0, t=t, pi=pi)
 
-# Rule of observation 0 
-rule = rules[0]
-columns = [x_train.columns[i] for i in range(x_train.shape[1])]
-rule_string = ['{} <= {} <= {}'.format(rule[i, 0] if rule[i, 0] > -1e+10 else -np.inf, columns[i],
-                                       rule[i, 1] if rule[i, 1] < 1e+10 else +np.inf) for i in S]
-rule_string = ' and '.join(rule_string)
+# cat_index := list(list) that contains the index of the dummies or one-hot variables grouped 
+# together for each variable. For example, if we have only 2 categorical variables Y, Z 
+# transformed into [Y_0, Y_1, Y_2] and [Z_0, Z_1, Z_2]
+
+cat_index = [[0, 1, 2], [3, 4, 5]]
+forest_sv = acvtree.shap_values(X, C=cat_index)
+```
+In addition, we can compute the SV given any coalitions. For example, if we want the following coalition <img src="https://latex.codecogs.com/gif.latex?C_0%20%3D%20%28X_0%2C%20X_1%2C%20X_2%29%2C%20C_1%3D%28X_3%2C%20X_4%29%2C%20C_2%3D%28X_5%2C%20X_6%29" />
+
+```python
+
+coalition = [[0, 1, 2], [3, 4], [5, 6]]
+forest_sv = acvtree.shap_values(X, C=coalition)
+```
+* **Finally, to compute the classic SV that is without coalition. We set C=[[]]**
+
+```python
+# Classic SV w.o coalition 
+coalition = [[]]
+forest_sv = acvtree.shap_values(X, C=coalition)
 ```
