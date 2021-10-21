@@ -6,7 +6,7 @@ In addition, we use the coalition version of SV to properly handle categorical v
 
 
 ## Requirements
-Python 3.6+ 
+Python **3.6**
 
 **OSX**: ACV uses Cython extensions that need to be compiled with multi-threading support enabled. 
 The default Apple Clang compiler does not support OpenMP.
@@ -14,6 +14,12 @@ To solve this issue, obtain the lastest gcc version with Homebrew that has multi
 see for example [pysteps installation for OSX.](https://pypi.org/project/pysteps/1.0.0/)
 
 **Windows**: Install MinGW (a Windows distribution of gcc) or Microsoft’s Visual C
+
+Install the required packages:
+
+```
+$ pip install -r requirements.txt
+```
 
 ## Installation
 
