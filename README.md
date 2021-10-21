@@ -35,7 +35,7 @@ tree_based = RandomForestClassifier() # or any tree-based models
 # Initialize the explainer
 acvtree = ACVTree(tree_based, data) # data should be np.ndarray with dtype=double
 ```
-### Shapley Values of categorical variables
+### Shapley Values with categorical variables
 Let assume we have a categorical variable Y with k modalities that we encoded by introducing the dummy variables <img src="https://latex.codecogs.com/gif.latex?Y_1%2C%5Cdots%2C%20Y_%7Bk-1%7D" />. As show in the paper, we must take the coalition of the dummy variables to correctly calculate the Shapley values.
 
 ```python
