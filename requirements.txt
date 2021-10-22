@@ -13,3 +13,5 @@ keras
 tensorflow
 streamlit
 anchor-exp
+rpy2 == 2.9.4
+shap
